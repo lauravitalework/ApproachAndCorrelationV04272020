@@ -1,16 +1,13 @@
-﻿//ApproachAndCorrelation
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace ApproachAndCorrelation
-{
 
+namespace Approach
+{
     class histBin
     {
         public double binFreq = 0;
@@ -425,122 +422,257 @@ namespace ApproachAndCorrelation
 
 
         }
-        static List<String> MainConvertTenToOrdered(String FileName, Boolean includeTeachers, Boolean includeLabs, String version)
+        static Double LawofCosines(String[] linecolumns)
         {
-            int lineCount = 1;
-            int lineMax = 1000000;
-            string line = "";
-            /*using (StreamReader readerFile = new StreamReader(FileName))
+            double result = 0;
+
+
+
+            double a2 = Math.Pow(Convert.ToDouble(linecolumns[11]) - Convert.ToDouble(linecolumns[9]), 2) + Math.Pow(Convert.ToDouble(linecolumns[12]) - Convert.ToDouble(linecolumns[10]), 2);
+            double b2 = Math.Pow(Convert.ToDouble(linecolumns[7]) - Convert.ToDouble(linecolumns[9]), 2) + Math.Pow(Convert.ToDouble(linecolumns[8]) - Convert.ToDouble(linecolumns[10]), 2);
+            double c2 = Math.Pow(Convert.ToDouble(linecolumns[11]) - Convert.ToDouble(linecolumns[7]), 2) + Math.Pow(Convert.ToDouble(linecolumns[12]) - Convert.ToDouble(linecolumns[8]), 2);
+            //double neg2bc = -2*((Math.Sqrt(b2))*(Math.Sqrt(c2)));
+            // THREE POINTS
+
+            double p1t0x = (Convert.ToDouble(linecolumns[7])); //A = person1@time0
+            double p1t0y = (Convert.ToDouble(linecolumns[8]));
+
+            double p1t1x = (Convert.ToDouble(linecolumns[11]));  //B = person1@time1
+            double p1t1y = (Convert.ToDouble(linecolumns[12]));
+
+            double p2t0x = (Convert.ToDouble(linecolumns[9]));  //C = person2@t0
+            double p2t0y = (Convert.ToDouble(linecolumns[10]));
+
+
+            //making unit vector components
+            double l1x = (p1t1x - p1t0x);
+            double l1y = (p1t1y - p1t0y);
+            double l1mag = Math.Sqrt((l1x * l1x) + (l1y * l1y));
+
+
+            double l2x = (p2t0x - p1t0x);
+            double l2y = (p2t0y - p1t0y);
+            double l2mag = Math.Sqrt((l2x * l2x) + (l2y * l2y));
+            //normalization of vectors
+            double l1xp = l1x / l1mag;
+            double l1yp = l1y / l1mag;
+            double l2xp = l2x / l2mag;
+            double l2yp = l2y / l2mag;
+
+            double ax = p1t0x;
+            double ay = p1t0y;
+
+            double bx = ax + l1xp; // here, the addition was with the l1x not l1xp and the same with by,cx,cy. It was revised to utilize the normalized vector to create the normalized points.
+            double by = ay + l1yp;
+
+            double cx = ax + l2xp;
+            double cy = ay + l2yp;
+
+
+            /*BigFloat ax = BigFloat.Pow((Convert.ToDouble(linecolumns[11]) - Convert.ToDouble(linecolumns[9])), 2);
+            BigFloat ay = BigFloat.Pow((Convert.ToDouble(linecolumns[12]) - Convert.ToDouble(linecolumns[10])), 2);
+
+            BigFloat bx = BigFloat.Pow((Convert.ToDouble(linecolumns[7]) - Convert.ToDouble(linecolumns[9])), 2);
+            BigFloat by = BigFloat.Pow((Convert.ToDouble(linecolumns[8]) - Convert.ToDouble(linecolumns[10])), 2);
+           
+            BigFloat cx = BigFloat.Pow((Convert.ToDouble(linecolumns[11]) - Convert.ToDouble(linecolumns[7])), 2);
+            BigFloat cy = BigFloat.Pow((Convert.ToDouble(linecolumns[12]) - Convert.ToDouble(linecolumns[8])), 2);
+            BigFloat eResult = new BigFloat(1234);*/
+
+            double axy2 = Math.Pow(Convert.ToDouble((bx - cx)), 2) + Math.Pow(Convert.ToDouble((by - cy)), 2);
+            double bxy2 = Math.Pow(Convert.ToDouble((ax - cx)), 2) + Math.Pow(Convert.ToDouble((ay - cy)), 2);
+            double cxy2 = Math.Pow(Convert.ToDouble((bx - ax)), 2) + Math.Pow(Convert.ToDouble((by - ay)), 2); //WEIRD
+            double neg2bc = (-2 * Math.Sqrt(bxy2) * Math.Sqrt(cxy2));
+            if (neg2bc == 0 || (axy2 - bxy2 - cxy2) == 0)
             {
-                //"/Users/chitrabanarjee/Desktop/Messinger/approaches_tenthofasec/approach_trunk_2_20_2019_7_31_2019_1777209647.CSV"
-                line = readerFile.ReadLine();
-                while ((!readerFile.EndOfStream))
-                {
-                    line = readerFile.ReadLine();
-                    string[] lineColumns = line.Split(',');
-                    if(lineColumns.Length!=25)
-                    {
-                        Console.WriteLine("lineLength " + lineColumns.Length + "lineCount " + lineCount);
-                        Console.WriteLine(line);
-                        /*swa.WriteLine("Person 1, 
-                         * Person2, 
-                         * Interaction Time, 
-                         * Interaction Millisecond,
-                         * d1,
-                         * d2,
-                         * approachMeters,
-                         * x10,
-                         * y10,
-                         * x20,
-                         * y20,
-                         * x11,
-                         * y11,x21,y21, WithinGR, WithinGRAnd45deg, Angle1, Angle2,Type1, Type2, Gender1, Gender2, Diagnosis1, Diagnosis2 ");
-                         *//*
-                    }
-                    lineCount++;
-                }
+                result = 0;
             }
-            Console.WriteLine("lineCount " + lineCount);
-            Console.WriteLine("lastLine " + line );
-    */
-            //Console.ReadLine();
+            else
+            {
+                result = ((axy2 - bxy2 - cxy2) / (neg2bc));
+            }
 
 
+            /*BigFloat axy2 = ax + ay;
+            BigFloat bxy2 = bx + by;
+            BigFloat cxy2 = cx + cy;
+            BigFloat neg2bc = (-2 * BigFloat.Sqrt(bxy2) * BigFloat.Sqrt(cxy2));
+           
+           
+           
+            result = Convert.ToDouble(eResult.ToString()); */
+            //expResult = Math.Exp(Math.Log(b) - Math.Log(2 * c)) + Math.Exp(Math.Log(c) - Math.Log(2 * b)) - Math.Exp(2 * Math.Log(a) - Math.Log(2 * c) - Math.Log(b));
+            //result = (a2 - b2 - c2) / neg2bc;
+            if (result > 1.000001 || result < -1.000001)
+                throw new Exception("Squared cosine larger than 1");
 
-                    List<String> orderedPairList = new List<string>();
+            return result;
+        }
+        static List<String> MainConvertTenToOrdered(String FileName, Boolean includeTeachers, Boolean includeLabs, String version, Boolean weightYN)
+        {
+            List<String> orderedPairList = new List<string>();
 
-            TextWriter OrderedFile = new StreamWriter(FileName.Replace(".", "_"+ version+"Ordered."), false);
+            TextWriter OrderedFile = new StreamWriter(FileName.Replace(".", "_" + version + "Ordered."), false);
             using (StreamReader readerFile = new StreamReader(FileName))
             {
                 //"/Users/chitrabanarjee/Desktop/Messinger/approaches_tenthofasec/approach_trunk_2_20_2019_7_31_2019_1777209647.CSV"
-                line = readerFile.ReadLine();
-                OrderedFile.WriteLine(line + ",PairA,PairOrdered,Date,TimeMS");
+                string line = readerFile.ReadLine();
+                //quick fix for extra columns/approach versions with long ID appended
+                if (line.Split(',').Length > 25)
+                {
+                    String[] lineCols2 = new String[25];
+                    String[] lineCols = line.Split(',');
+                    Array.Copy(lineCols, 0, lineCols2, 0, 25);
+                    line = String.Join(",", lineCols2);
+                }
+                OrderedFile.WriteLine(line + ",PairA,PairOrdered,Date,TimeMS,cosAngleM");
                 while ((!readerFile.EndOfStream))
                 {
-                    lineCount++;
-                    //if (lineCount > lineMax)
-                    //    break;
-
-                    //DELETE
-
-
                     line = readerFile.ReadLine();
+
                     string[] lineColumns = line.Split(',');
-                    string person1 = lineColumns[0];
-                    string person2 = lineColumns[1];
-
-                    bool isLongId = person1.IndexOf("_") != person1.LastIndexOf("_");
-                    if (isLongId)
+                    if (lineColumns.Length > 24)
                     {
-                        person1 = getShortId(person1);
-                        person2 = getShortId(person2);
-                    }
 
-                    string szTime = lineColumns[2];
-                    string szMillisec = lineColumns[3];
-                    string szTimeMS = szTime.Replace(" AM", "." + szMillisec + " AM").Replace(" PM", "." + szMillisec + " PM");
-                    Boolean isTeacher1 = person1.Contains("T");
-                    Boolean isLab1 = (person1.Contains("L"));//: (person1.Contains("Lab") || person2.Contains("Lab"));
-                    Boolean isTeacher2 = person2.Contains("T");
-                    Boolean isLab2 = (person2.Contains("L"));//: (person1.Contains("Lab") || person2.Contains("Lab"));
 
-                    if ((includeLabs && includeTeachers) ||
-                        ((!includeLabs) && (!includeTeachers) && (!(isTeacher1 || isLab1 || isTeacher2 || isLab2))) ||
-                        (((!includeLabs) && (!(isLab1 || isLab2))) &&
-                        ((!includeTeachers) && (!(isTeacher1 || isTeacher2))))
-                        //((!includeLabs) && (!(person1.Contains("Lab") || person2.Contains("Lab")))) &&
-                        //((!includeTeachers) && (!(person1.Contains("T") || person2.Contains("T"))))
-                        )
-                    {
-                        string pairA = person1 + "|" + person2;
-                        int iperson1 = Convert.ToInt32(new string(person1.Where(c => char.IsDigit(c)).ToArray()));
-                        int iperson2 = Convert.ToInt32(new string(person2.Where(c => char.IsDigit(c)).ToArray()));
-                        string pairOrdered = iperson1 < iperson2 ? iperson1 + "|" + iperson2 : iperson2 + "|" + iperson1;
-
-                        if (!orderedPairList.Contains(pairOrdered))
+                        string person1 = lineColumns[0];
+                        string person2 = lineColumns[1];
+                        if (person1.Trim() == "T1L" && person2.Trim() == "1L")
                         {
-                            orderedPairList.Add(pairOrdered);
+                            bool flag = true;
                         }
 
-                        String szNewLine = line;//.IndexOf(",") != line.LastIndexOf(",") ? iperson1 + "," + iperson1 + "," + line.Substring(line.IndexOf(",") + 1).Substring(line.IndexOf(",") + 1) : line;
-                        if (line.IndexOf(",") != line.LastIndexOf(","))
-                        {
-                            szNewLine = szNewLine.Substring(szNewLine.IndexOf(",") + 1);
-                            szNewLine = szNewLine.Substring(szNewLine.IndexOf(",") + 1);
-                            szNewLine = iperson1 + "," + iperson2 + "," + szNewLine;
+                        double angleA = Math.Pow(Math.Cos(Convert.ToDouble(lineColumns[17])), 2);
+                        double lawCos = LawofCosines(lineColumns);
+                        double approachMeters = Convert.ToDouble(lineColumns[6]);
+                        double approachWeightedR = approachMeters * angleA * Math.Pow(lawCos, 2);// weighting by angle of movement and angle of orientation
 
+
+                        //////
+                        bool isLongId = person1.IndexOf("_") != person1.LastIndexOf("_");
+                        if (isLongId)
+                        {
+                            person1 = getShortId(person1);
+                            person2 = getShortId(person2);
                         }
 
-                        string szDay = FileName.Substring(FileName.LastIndexOf("approach_trunk_", StringComparison.CurrentCulture) + 15);
-                        szDay = szDay.Substring(0, szDay.LastIndexOf("_", StringComparison.CurrentCulture));
-                        szDay = szDay.Substring(0, szDay.LastIndexOf("_", StringComparison.CurrentCulture));
-                        szDay = szDay.Substring(0, szDay.LastIndexOf("_", StringComparison.CurrentCulture));
-                        szDay = szDay.Substring(0, szDay.LastIndexOf("_", StringComparison.CurrentCulture));
+                        string szTime = lineColumns[2];
+                        string szMillisec = lineColumns[3];
+                        string szTimeMS = szTime.Replace(" AM", "." + szMillisec + " AM").Replace(" PM", "." + szMillisec + " PM");
+                        Boolean isTeacher1 = person1.IndexOf("T") == 0;
+                        Boolean isLab1 = person1.IndexOf("L") == 0;//: (person1.Contains("Lab") || person2.Contains("Lab"));
+                        Boolean isTeacher2 = person2.IndexOf("T") == 0;
+                        Boolean isLab2 = person2.IndexOf("L") == 0;//: (person1.Contains("Lab") || person2.Contains("Lab"));
+
+                        if ((includeLabs && includeTeachers) ||
+                            ((!includeLabs) && (!includeTeachers) && (!(isTeacher1 || isLab1 || isTeacher2 || isLab2))) ||
+                            (((!includeLabs) && (!(isLab1 || isLab2)))) ||
+                            ((!includeTeachers) && (!(isTeacher1 || isTeacher2))))
 
 
-                        OrderedFile.WriteLine(szNewLine + "," + pairA + "," + pairOrdered + "," + szDay + "," + szTimeMS);
+                        {
+                            string pairA = person1 + "|" + person2;
+                            int iperson1 = Convert.ToInt32(new string(person1.Where(c => char.IsDigit(c)).ToArray()));
+                            int iperson2 = Convert.ToInt32(new string(person2.Where(c => char.IsDigit(c)).ToArray()));
+                            //quick fix for extra columns/approach versions with long ID appended
+                            if (line.Split(',').Length > 25)
+                            {
+                                line = line.Substring(0, line.LastIndexOf(","));
+                                line = line.Substring(0, line.LastIndexOf(","));
+                                lineColumns = line.Split(',');
+                            }
+
+                            Console.WriteLine(line);
+
+
+                            string pairP1 = "";// iperson1 < iperson2 ?(isTeacher1?person1: iperson1.ToString()) : (isTeacher2 ?person2: iperson2.ToString()) ;
+                            string pairP2 = ""; // iperson1 > iperson2 ? (isTeacher1 ? person1 : iperson1.ToString()) : (isTeacher2 ? person2 : iperson2.ToString());
+                            if (iperson1 <= iperson2)
+                            {
+                                if (isTeacher1 || isLab1)
+                                {
+                                    pairP1 = person1;
+
+                                }
+                                else
+                                {
+                                    pairP1 = iperson1.ToString();
+                                }
+                                if (isTeacher2 || isLab2)
+                                {
+                                    pairP2 = person2;
+                                }
+                                else
+                                {
+                                    pairP2 = iperson2.ToString();
+                                }
+
+                            }
+                            else
+                            {
+                                if (isTeacher2 || isLab2)
+                                {
+                                    pairP1 = person2;
+                                }
+                                else
+                                {
+                                    pairP1 = iperson2.ToString();
+                                }
+                                if (isTeacher1 || isLab1)
+                                {
+                                    pairP2 = person1;
+                                }
+                                else
+                                {
+                                    pairP2 = iperson1.ToString();
+                                }
+                            }
+
+                            string pairOrdered = pairP1 + "|" + pairP2; //iperson1 < iperson2 ? iperson1 + "|" + iperson2 : iperson2 + "|" + iperson1;
+                            if (pairOrdered.Trim() == "1|1")
+                            {
+                                bool flag = true;
+                            }
+
+                            if (!orderedPairList.Contains(pairOrdered))
+                            {
+                                orderedPairList.Add(pairOrdered);
+                            }
+
+                            String[] part1 = new string[6];
+                            String[] part2 = new string[lineColumns.Length - 7];
+                            Array.Copy(lineColumns, 0, part1, 0, 6);
+                            Array.Copy(lineColumns, 7, part2, 0, lineColumns.Length - 7);
+
+                            String szNewLine = String.Join(",", part1) + "," + (weightYN ? approachWeightedR : approachMeters) + "," + String.Join(",", part2);
+
+                            if (szNewLine.Length < 8)
+                            {
+                                bool flag = true;
+                            }
+
+                            if (szNewLine.IndexOf(",") != szNewLine.LastIndexOf(","))
+                            {
+                                szNewLine = szNewLine.Substring(szNewLine.IndexOf(",") + 1);
+                                szNewLine = szNewLine.Substring(szNewLine.IndexOf(",") + 1);
+                                szNewLine = pairA.Replace("|", ",") + "," + szNewLine;
+
+                            }
+
+                            string szDay = FileName.Substring(FileName.LastIndexOf("approach_trunk_", StringComparison.CurrentCulture) + 15);
+                            szDay = szDay.Substring(0, szDay.LastIndexOf("_", StringComparison.CurrentCulture));
+                            szDay = szDay.Substring(0, szDay.LastIndexOf("_", StringComparison.CurrentCulture));
+                            szDay = szDay.Substring(0, szDay.LastIndexOf("_", StringComparison.CurrentCulture));
+                            szDay = szDay.Substring(0, szDay.LastIndexOf("_", StringComparison.CurrentCulture));
+
+
+                            OrderedFile.WriteLine(szNewLine + "," + pairA + "," + pairOrdered + "," + szDay + "," + szTimeMS + "," + lawCos);
+                        }
                     }
-
+                    else
+                    {
+                        Console.WriteLine("ERROR line length");
+                    }
                 }
 
             }
@@ -550,6 +682,42 @@ namespace ApproachAndCorrelation
             return orderedPairList;
 
         }
+        static List<String> GetPairsFromOrdered(String FileName)
+        {
+            List<String> orderedPairList = new List<string>();
+
+            using (StreamReader readerFile = new StreamReader(FileName))
+            {
+                //"/Users/chitrabanarjee/Desktop/Messinger/approaches_tenthofasec/approach_trunk_2_20_2019_7_31_2019_1777209647.CSV"
+                string line = readerFile.ReadLine();
+                while ((!readerFile.EndOfStream))
+                {
+                    line = readerFile.ReadLine();
+
+                    string[] lineColumns = line.Split(',');
+                    if (lineColumns.Length > 25)
+                    {
+                        String pairOrdered = lineColumns[26].Trim();
+
+                        if (!orderedPairList.Contains(pairOrdered))
+                        {
+                            orderedPairList.Add(pairOrdered);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("ERROR line length");
+                    }
+                }
+
+
+
+
+
+            }
+            return orderedPairList;
+        }
+
 
         static void HistFile(String FileName)
         {
@@ -780,24 +948,22 @@ namespace ApproachAndCorrelation
             public string pairA = "";
             public string pairOrdered = "";
             public string date = "";
-            public int index = 0;
-            public DateTime timeMS = DateTime.Now;
+
 
         }
 
 
         static Dictionary<String, List<smaClass>> SMA(String fileAppTenthOrdered, int order, String szSMAfile, List<String> pairsToInclude, Boolean append)
         {
+            //order is window size of smooth averaging
             // Dictionary<String, List<smaClass>> smas = new Dictionary<string, List<smaClass>>();
             Dictionary<String, List<smaClass>> smasByOrder = new Dictionary<string, List<smaClass>>();
 
             Dictionary<String, List<String>> szSmas = new Dictionary<string, List<String>>();
 
-
-
             TextWriter NewFile = new StreamWriter(szSMAfile, append);
             if (!append)
-                NewFile.WriteLine("Person1,Person2,d0,approachMeters,approachWeighted,PairA,PairOrdered,Date,RealIndex,Index,Time");
+                NewFile.WriteLine("Person1,Person2,d0,approachMeters,approachWeighted,PairA,PairOrdered,Date");
 
             int lineCount = 0;
             using (StreamReader sr = new StreamReader(fileAppTenthOrdered))
@@ -807,30 +973,33 @@ namespace ApproachAndCorrelation
                 while ((!sr.EndOfStream))// && lineCount<1000000)// && lineCount<10000)
                 {
                     lineCount++;
-
-                    if (lineCount == 7201231)
-                        lineCount = lineCount;
+                    String commaLine = sr.ReadLine();
+                    String[] columns = commaLine.Split(',');
                     try
                     {
-                        String commaLine = sr.ReadLine();
-                        String[] columns = commaLine.Split(',');
-                        if (columns.Length > 4)//16)
+                        //Person 1, Person2, Interaction Time, Interaction Millisecond,
+                        //d1,d2,approachMeters,x10,y10,x20,y20,x11,y11,x21,y21, WithinGR,
+                        //WithinGRAnd45deg, Angle1, Angle2,Type1, Type2, Gender1, Gender2,
+                        //Diagnosis1, Diagnosis2 ,PairA,PairOrdered,Date,TimeMS
+                        if (columns[6].Trim().ToUpper().IndexOf("NA") == 0)
                         {
-                            //  Person 1, Person2, Interaction Time, Interaction Millisecond,d1,d2,approachMeters,x10,y10,x20,y20,x11,y11,x21,y21, 
-                            // WithinGR, WithinGRAnd45deg, Angle1, Angle2,Type1, Type2, Gender1, Gender2, Diagnosis1, Diagnosis2 ,
-                            //PairA,PairOrdered,Date,TimeMS
-
+                            bool stop = true;
+                            columns[6] = "0";
+                        }
+                        if (columns.Length >= 16)//16)
+                        {
                             String person1 = columns[0].Trim();
                             String person2 = columns[1].Trim();
                             double d0 = Convert.ToDouble(columns[4]);
                             double d1 = Convert.ToDouble(columns[5]);
                             double app = Convert.ToDouble(columns[6]);
-                            String pairA = columns[25].Trim();//15
-                            String pairOrdered = columns[26].Trim();//16
+                            String pairA = columns[25].Trim();
+                            String pairOrdered = columns[26].Trim();
                             if (pairsToInclude.Contains(pairOrdered))
                             {
-                                String date = columns[27].Trim();//17
-                                String szTimeMs = columns[28].Trim();
+                                String date = columns[27].Trim();
+
+
                                 // if (!smas.ContainsKey(pairA))
                                 //     smas.Add(pairA, new List<smaClass>());
                                 if (!szSmas.ContainsKey(pairA))
@@ -842,18 +1011,12 @@ namespace ApproachAndCorrelation
                                     app + "," +
                                     pairA + "," +
                                     pairOrdered + "," +
-                                    date+","+ szTimeMs);
+                                    date + "," +
+                                    columns[28]
+                                    );
 
-                                
-                                /* smaClass sma = new smaClass();
-                                 sma.d0 = d0;
-                                 sma.app = app;
-                                 sma.person1 = person1;
-                                 sma.person2 = person2;
-                                 sma.pairA = pairA;
-                                 sma.pairOrdered = pairOrdered;
-                                 sma.date = date;
-                                 smas[pairA].Add(sma);*/
+
+
                             }
                         }
                     }
@@ -866,121 +1029,100 @@ namespace ApproachAndCorrelation
 
                 foreach (String pairA in szSmas.Keys)
                 {
+                    int IndexCol = 0;
 
-                    int pairIndex = 0;
-                    int realPairIndex = 0;
-                    DateTime lastTimeStamp = DateTime.Now;
-                    Boolean notFirstStamp = false;
+                    //for (int orderPos = 0; orderPos + order <= szSmas[pairA].Count; orderPos++)
                     for (int orderPos = 0; orderPos + order <= szSmas[pairA].Count; orderPos++)
                     {
-
+                        //op  0
                         try
                         {
                             smaClass smaVals = new smaClass();
                             String[] lineColumns = szSmas[pairA][orderPos].Split(',');
-                            double totalD0 = Convert.ToDouble(lineColumns[2]);
-                            double totalApp = Convert.ToDouble(lineColumns[3]);
-                            for (int smaPos = 1; smaPos < order; smaPos++)
+                            double totalD0 = 0;
+                            double totalApp = 0;
+                            int smaPos = 0;
+
+                            DateTime priorTime = new DateTime(2000, 1, 1);
+
+                            //op 0  smapos 0  100 200 300
+                            //op 1  smapos 100 200 300
+                            //op 2  smapos 200 300
+                            //op 3  smapos 500 
+                            //op 4  smapos 700 NA breaks and doesn not add
+                            //op 5 smapos 900 10app
+                            //op 6 smapos 1000 NAapp  NA breaks and doesn not add
+                            //op 7 smapos 1100  20app 
+                            for (; smaPos < order; smaPos++)
                             {
+                                //05/8/2020 TODO  checck if t0-t1 is .1 sec if not break
                                 String[] lineColumns2 = szSmas[pairA][orderPos + smaPos].Split(',');
 
-                                totalApp += Convert.ToDouble(lineColumns2[3]);
-                                totalD0 += Convert.ToDouble(lineColumns2[2]);
-                            }
-                            /*szSmas[pairA].Add( 
-                                person1 + "," +
-                                person2 + "," +
-                                d0 + "," +
-                                app + "," +
-                                pairA + "," +
-                                pairOrdered + ","+
-                                date);*/
-                            smaVals.app = totalApp != 0 ? totalApp / order : 0;
-                            smaVals.d0 = totalD0 != 0 ? totalD0 / order : 0;
-                            smaVals.person1 = lineColumns[0].Trim();
-                            smaVals.person2 = lineColumns[1].Trim();
-                            smaVals.pairA = lineColumns[4].Trim();
-                            smaVals.pairOrdered = lineColumns[5].Trim();
-                            smaVals.date = lineColumns[6].Trim();
+                                String[] szThisDateArr = lineColumns2[6].Trim().Split('_');
+                                DateTime thisTimeStamp = Convert.ToDateTime(lineColumns2[7]);//
+                                DateTime thisTime = new DateTime(Convert.ToInt16(szThisDateArr[2]), Convert.ToInt16(szThisDateArr[0]), Convert.ToInt16(szThisDateArr[1]), thisTimeStamp.Hour, thisTimeStamp.Minute, thisTimeStamp.Second, thisTimeStamp.Millisecond);
 
-                            smaVals.timeMS = Convert.ToDateTime(lineColumns[7].Trim());
-                            if (!smasByOrder.ContainsKey(pairA))
-                            {
-                                smasByOrder.Add(pairA, new List<smaClass>());
-                            }
-                            //pairIndex
-                            smaVals.index = pairIndex;
+                                // thisTime.AddMilliseconds(Convert.ToDouble(lineColumns2[7]));
 
 
-                            if (notFirstStamp)
-                            {
-                                
-                                TimeSpan difference = smaVals.timeMS.Subtract(lastTimeStamp);
-                                if (difference.TotalMilliseconds > 100)
+                                //11:33:29.300 AM
+                                if (lineColumns2[3].Trim().ToUpper() == "NA" || lineColumns2[3].Trim().ToUpper() == "NAN")
                                 {
-                                    smaClass smaValsMissing = new smaClass();
+                                    bool stop = true;
 
-                                    smaValsMissing.app =  0;
-                                    smaValsMissing.d0 = 0;
-                                    smaValsMissing.person1 = lineColumns[0].Trim();
-                                    smaValsMissing.person2 = lineColumns[1].Trim();
-                                    smaValsMissing.pairA = lineColumns[4].Trim();
-                                    smaValsMissing.pairOrdered = lineColumns[5].Trim();
-                                    smaValsMissing.date = lineColumns[6].Trim();
-                                    smaVals.index = pairIndex;
-                                     
-
-                                    while(difference.TotalMilliseconds > 100)
-                                    {
-                                        smaValsMissing.timeMS = Convert.ToDateTime(lastTimeStamp).AddMilliseconds(100);
-                                        
-                                        if (!smasByOrder.ContainsKey(pairA))
-                                        {
-                                            smasByOrder.Add(pairA, new List<smaClass>());
-                                        }
-                                        smasByOrder[pairA].Add(smaValsMissing);
-                                        
-                                        NewFile.WriteLine(smaValsMissing.person1 + "," +
-                                        smaValsMissing.person2 + ",,,," +
-                                        smaValsMissing.pairA + "," + smaValsMissing.pairOrdered +
-                                        "," + smaValsMissing.date + "," + realPairIndex + "," + pairIndex + "," + 
-                                        smaValsMissing.timeMS.Hour+":"+ smaValsMissing.timeMS.Minute + ":" + smaValsMissing.timeMS.Second + "." + smaValsMissing.timeMS.Millisecond );
-                                        realPairIndex++;
-                                        lastTimeStamp = smaValsMissing.timeMS;
-                                        difference = smaVals.timeMS.Subtract(lastTimeStamp);
-                                    }
-
-
-
-                                    //realPairIndex += (Convert.ToInt16(difference.TotalMilliseconds/10) - 100);
                                 }
+                                if ((priorTime.Year < 2010 || ((thisTime - priorTime).Milliseconds <= 100)) && lineColumns2[3].Trim().ToUpper() != "NA")
+                                {
+
+
+                                    totalApp += Convert.ToDouble(lineColumns2[3]);
+                                    totalD0 += Convert.ToDouble(lineColumns2[2]);
+
+
+                                    priorTime = thisTime;
+
+
+                                }
+                                else
+                                    break;
+
+
                             }
-                            else
+
+
+                            //05/8/2020 switched divisor from order to smaPos since there might be less than 10 items at th end using 
+                            if (lineColumns[3].Trim().ToUpper() != "NA" || lineColumns[3].Trim().ToUpper() != "NAN")
                             {
-                                notFirstStamp = true;
+                                smaVals.app = totalApp != 0 ? totalApp / smaPos : 0;
+                                smaVals.d0 = totalD0 != 0 ? totalD0 / smaPos : 0;
+                                smaVals.person1 = lineColumns[0].Trim();
+                                smaVals.person2 = lineColumns[1].Trim();
+                                smaVals.pairA = lineColumns[4].Trim();
+                                smaVals.pairOrdered = lineColumns[5].Trim();
+                                smaVals.date = lineColumns[6].Trim();
+                                if (!smasByOrder.ContainsKey(pairA))
+                                {
+                                    smasByOrder.Add(pairA, new List<smaClass>());
+                                }
+
+                                smasByOrder[pairA].Add(smaVals);
+                                double weightA = (smaVals.app / smaVals.d0); // weighting by (1/initial distance)
+                                NewFile.WriteLine(smaVals.person1 + "," +
+                                smaVals.person2 + "," + smaVals.d0 + "," + smaVals.app + "," +
+                                weightA + "," + smaVals.pairA + "," + smaVals.pairOrdered +
+                                "," + smaVals.date);
+
+                                Console.WriteLine(IndexCol + "," + smaVals.person1 + "," +
+                                smaVals.person2 + "," + smaVals.d0 + "," + smaVals.app + "," +
+                                weightA + "," + smaVals.pairA + "," + smaVals.pairOrdered +
+                                "," + smaVals.date);
+                                IndexCol++;
                             }
-                            lastTimeStamp = smaVals.timeMS;
-
-
-                            smasByOrder[pairA].Add(smaVals);
-                            double weightA = smaVals.app / smaVals.d0;
-                            NewFile.WriteLine(smaVals.person1 + "," +
-                            smaVals.person2    + "," + smaVals.d0 + "," + smaVals.app + "," +
-                            weightA + "," + smaVals.pairA + "," + smaVals.pairOrdered +
-                            "," + smaVals.date + "," + realPairIndex + "," + pairIndex + "," +
-                             smaVals.timeMS.Hour + ":" + smaVals.timeMS.Minute + ":" + smaVals.timeMS.Second + "." + smaVals.timeMS.Millisecond);
-
-                          /*  Console.WriteLine(smaVals.person1 + "," +
-                            smaVals.person2  + "," + smaVals.d0 + "," + smaVals.app + "," +
-                            weightA + "," + smaVals.pairA + "," + smaVals.pairOrdered +
-                            "," + smaVals.date + "," + pairIndex);*/
                         }
                         catch (Exception e)
                         {
                             Console.WriteLine("ERROR2: " + e.Message);
                         }
-                        pairIndex++;
-                        realPairIndex++;
                     }
 
 
@@ -990,53 +1132,7 @@ namespace ApproachAndCorrelation
             }
 
             // 1 2 3 4
-            /*  foreach (String pairA in smas.Keys)
-              {
-                  for (int orderPos = 0; orderPos + order <= smas[pairA].Count; orderPos++)
-                  {
 
-                      try
-                      {
-                          smaClass smaVals = new smaClass();
-                          double totalD0 = smas[pairA][orderPos].d0;
-                          double totalApp = smas[pairA][orderPos].app;
-                          for (int smaPos = 1; smaPos < order; smaPos++)
-                          {
-                              totalApp += smas[pairA][orderPos].app;
-                              totalD0 += smas[pairA][orderPos].d0;
-                          }
-                          smaVals.app = totalApp != 0 ? totalApp / order : 0;
-                          smaVals.d0 = totalD0 != 0 ? totalD0 / order : 0;
-                          smaVals.person1 = smas[pairA][orderPos].person1;
-                          smaVals.person2 = smas[pairA][orderPos].person2;
-                          smaVals.pairA = smas[pairA][orderPos].pairA;
-                          smaVals.pairOrdered = smas[pairA][orderPos].pairOrdered;
-                          smaVals.date = smas[pairA][orderPos].date;
-                          if (!smasByOrder.ContainsKey(pairA))
-                          {
-                              smasByOrder.Add(pairA, new List<smaClass>());
-                          }
-
-                          smasByOrder[pairA].Add(smaVals);
-                          double weightA = smaVals.app / smaVals.d0;
-                          NewFile.WriteLine(smaVals.person1 + "," +
-                          smaVals.person2 + "," + smaVals.d0 + "," + smaVals.app + "," +
-                          weightA + "," + smaVals.pairA + "," + smaVals.pairOrdered +
-                          "," + smaVals.date);
-
-                          Console.WriteLine(smaVals.person1 + "," +
-                          smaVals.person2 + "," + smaVals.d0 + "," + smaVals.app + "," +
-                          weightA + "," + smaVals.pairA + "," + smaVals.pairOrdered +
-                          "," + smaVals.date);
-                      }
-                      catch (Exception e)
-                      {
-                          Console.WriteLine("ERROR2: " + e.Message);
-                      }
-                  }
-
-
-              }}*/
             //Person1, Person2, Interaction Time, Interaction Millisecond,d1,d2,approachMeters,x10,y10,x20,y20,x11,y11,x21,y21,PairA,PairOrdered,Date
 
 
@@ -1109,27 +1205,18 @@ namespace ApproachAndCorrelation
 
 
 
-               // Console.WriteLine("CORREL FOR INTERVAL " + s + "-" + (s + intervalSize - 1) + " : " + Correl);
+                Console.WriteLine("CORREL FOR INTERVAL " + s + "-" + (s + intervalSize - 1) + " : " + Correl);
 
                 correlations.WriteLine(indexCol + "," + s + "," + (s + intervalSize - 1) + "," + Correl);
                 indexCol++;
             }
             correlations.Close();
         }
-        static void Corr(String szFileName, int intervalSize, String szOutputFileName)
-        {//intervalSize -1 if we want to correlate all 
+        static void CorrFileName(String szFileName, int intervalSize, String szOutputFileName)
+        {
 
             Dictionary<String, List<double>> pairWeightedApps1 = new Dictionary<string, List<double>>();
             Dictionary<String, List<double>> pairWeightedApps2 = new Dictionary<string, List<double>>();
-            Dictionary<String, List<double>> pairWeightedApps1s = new Dictionary<string, List<double>>();
-            Dictionary<String, List<double>> pairWeightedApps2s = new Dictionary<string, List<double>>();
-
-            Dictionary<String, List<String>> pairFroms = new Dictionary<string, List<String>>();
-            //Dictionary<String, List<String>> pairTos = new Dictionary<string, List<String>>();
-
-
-
-
             int lineNumber = 0;
             String p1 = "";
             String p2 = "";
@@ -1139,203 +1226,110 @@ namespace ApproachAndCorrelation
                 while ((!sr.EndOfStream))// && lineCount<10000)
                 {
                     lineNumber++;
-                    if (lineNumber == 17612)
+                    try
                     {
-                        lineNumber = lineNumber;
-                    }
-                    String commaLine = sr.ReadLine();
-                    String[] columns = commaLine.Split(',');
-                    if (columns.Length > 7)
-                    {
-                        p1 = columns[0].Trim();
-                        p2 = columns[1].Trim();
-                        String pairOrdered = columns[6].Trim();
-                        //2 13 
-                        if (columns[2].Trim()!="" && columns[13].Trim() != "")
+                        String commaLine = sr.ReadLine();
+                        String[] columns = commaLine.Split(',');
+                        if (p1 == "Lab1P" || p2 == "Lab1P")
                         {
-                            double pairSMA = Convert.ToDouble(columns[4]);
-                            double pairSMAshuffle = Convert.ToDouble(columns[13]);
-                            if (p1 == pairOrdered.Split('|')[0])
+                            bool stop = true;
+                        }
+                        if (columns.Length > 7)
+                        {
+                            p1 = columns[0].Trim();
+                            p2 = columns[1].Trim();
+                            String pairOrdered = columns[6].Trim();
+                            String[] pairOrderedArray = pairOrdered.Split('|');
+                            String p1A = pairOrderedArray[0];
+                            String p2A = pairOrderedArray[1];
+                            string p1num = string.Empty;
+                            for (int i = 0; i < p1.Length; i++)
                             {
+                                if (Char.IsDigit(p1[i]))
+                                    p1num += p1[i];
+                            }
+                            string p2num = string.Empty;
+
+                            for (int i = 0; i < p2.Length; i++)
+                            {
+                                if (Char.IsDigit(p2[i]))
+                                    p2num += p2[i];
+                            }
+                            Boolean p1First = Convert.ToInt16(p1num) < Convert.ToInt16(p2num);
+
+                            if (p1 == "3L" && p2 == "1L")
+                            {
+                                bool check = true;
+                            }
+                            if (!p1First)
+                            {
+                                bool check = true;
+                            }
+                            if (p1.IndexOf("T") >= 0 || p1.IndexOf("L") == 0 || p2.IndexOf("T") >= 0 || p2.IndexOf("L") == 0)
+                            {
+                                bool chekc = true;
+                            }
+                            if ((p1.ToUpper().IndexOf("T") == 0 || p1.ToUpper().IndexOf("L") == 0) &&
+                                (p2.ToUpper().IndexOf("T") != 0 && p2.ToUpper().IndexOf("L") != 0))
+                            {
+                                p1First = false;
+                            }
+                            else if ((p2.ToUpper().IndexOf("T") == 0 || p2.ToUpper().IndexOf("L") == 0) &&
+                                (p1.ToUpper().IndexOf("T") != 0 && p1.ToUpper().IndexOf("L") != 0))
+
+                            {
+                                p1First = true;
+                            }
+                            double pairSMA = Convert.ToDouble(columns[4]);
+
+
+
+                            if (pairSMA.ToString().Trim().ToLower() == "nan")
+                            {
+                                bool check = true;
+                            }
+                            //if (p1 == pairOrdered.Split('|')[0])
+                            if (p1First)//  pairOrdered.Split('|')[0].IndexOf(p1)==0)
+                            {
+
                                 if (!pairWeightedApps1.ContainsKey(pairOrdered))
                                     pairWeightedApps1.Add(pairOrdered, new List<double>());
                                 pairWeightedApps1[pairOrdered].Add(pairSMA);
-
-                                if (!pairWeightedApps1s.ContainsKey(pairOrdered))
-                                    pairWeightedApps1s.Add(pairOrdered, new List<double>());
-                                pairWeightedApps1s[pairOrdered].Add(pairSMAshuffle);
-
-                                if (!pairFroms.ContainsKey(pairOrdered))
-                                    pairFroms.Add(pairOrdered, new List<String>());
-                                pairFroms[pairOrdered].Add(columns[10].Trim());
-
                             }
                             else
                             {
                                 if (!pairWeightedApps2.ContainsKey(pairOrdered))
                                     pairWeightedApps2.Add(pairOrdered, new List<double>());
                                 pairWeightedApps2[pairOrdered].Add(pairSMA);
-
-                                if (!pairWeightedApps2s.ContainsKey(pairOrdered))
-                                    pairWeightedApps2s.Add(pairOrdered, new List<double>());
-                                pairWeightedApps2s[pairOrdered].Add(pairSMAshuffle);
                             }
-                        }
-                        
 
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        bool stop = true;
                     }
                 }
             }
             TextWriter correlations = new StreamWriter(szOutputFileName);// "approachesDATA_05_30_19perHOUR.csv");
-            correlations.WriteLine("PAIR,REALTIMEINDEX, FROM, TO, CORRELATION,TIMEFROM, TIMETO,SHUFFLED_PAIR,SHUFFLED_REALTIMEINDEX, SHUFFLED_FROM, SHUFFLED_TO, SHUFFLED_CORRELATION,TIMEFROM, TIMETO");
+            correlations.WriteLine("PAIR,INDEX, FROM, TO, CORRELATION");
             correlations.Close();
             foreach (String pair in pairWeightedApps1.Keys)
             {
                 if (pairWeightedApps2.ContainsKey(pair))
                 {
-                    CorrFourArrays(pair, pairWeightedApps1[pair], pairWeightedApps2[pair], pairWeightedApps1s[pair], pairWeightedApps2s[pair], intervalSize<0? pairWeightedApps1s[pair].Count-1: intervalSize, szOutputFileName, pairFroms[pair]);
-
-                    //Corr(pair, pairWeightedApps1[pair], pairWeightedApps2[pair], intervalSize, szOutputFileName);
+                    CorrPair(pair, pairWeightedApps1[pair], pairWeightedApps2[pair], intervalSize, szOutputFileName);
                 }
             }
 
         }
-        static void getTail(String szFileName, int numberOfLines, String szOutputFileName)
-        {
-            int lastLine = 0;
-            TextWriter tail = new StreamWriter(szOutputFileName);// "approachesDATA_05_30_19perHOUR.csv");
 
-            using (StreamReader sr = new StreamReader(szFileName))
-            {
-                tail.WriteLine(sr.ReadLine());
-                while ((!sr.EndOfStream))// && lineCount<10000)
-                {
-                    //if (lastLine <= intervalSize)
-                    {
-                      //  tail.WriteLine(sr.ReadLine());
-                    }
-                    //else
-                     //   break;
-                    lastLine++;
-
-                }
-            }
-             int lineNumber = 0;
-           
-            using (StreamReader sr = new StreamReader(szFileName))
-            {
-                tail.WriteLine(sr.ReadLine());
-                while ((!sr.EndOfStream))// && lineCount<10000)
-                {
-                    if(lineNumber>=lastLine- numberOfLines)
-                    {
-                        tail.WriteLine(sr.ReadLine());
-                    }
-                    lineNumber++;
-
-                }
-            } 
-            tail.Close();
-
-
-
-        }
-        static void getHead(String szFileName, int numberOfLines, String szOutputFileName)
-        {
-            int lastLine = 0;
-            TextWriter head = new StreamWriter(szOutputFileName);// "approachesDATA_05_30_19perHOUR.csv");
-
-            using (StreamReader sr = new StreamReader(szFileName))
-            {
-                head.WriteLine(sr.ReadLine());
-                while ((!sr.EndOfStream))// && lineCount<10000)
-                {
-                    if (numberOfLines == 0 || lastLine <= numberOfLines)
-                    {
-                        head.WriteLine(sr.ReadLine());
-                    }
-                    else
-                        break;
-                    lastLine++;
-
-                }
-            }
-
-            head.Close();
-
-
-
-        }
-        static void getHead(String szFileName, String szOutputFileName)
-        {
-            getHead(szFileName, 0, szOutputFileName);
-
-
-
-        }
-        static List<String> CorrTwoArrays(String pair, List<double> originalArray1, List<double> originalArray2, int intervalSize, String szOutputFileName, List<String> szTimes)
-        {
-
-            List<String> fileLine = new List<string>();
-            
-            int indexCol = 0;
-            for (int s = 0; s + intervalSize < originalArray1.Count; s = s + intervalSize)
-            {
-                List<String> szTimeFroms = szTimes.GetRange(s, intervalSize);
-
-                int intervalSize1 = s+ intervalSize <= originalArray1.Count?  intervalSize: originalArray1.Count-s;
-                int intervalSize2 = s + intervalSize <= originalArray2.Count ? intervalSize : originalArray2.Count - s;
-                int theSize = intervalSize1 < intervalSize2 ? intervalSize1 : intervalSize2;
-
-                List <double> array1 = originalArray1.GetRange(s, theSize);
-                List<double> array2 = originalArray2.GetRange(s, theSize);
-                List<double> array_xy = new List<double>(array1.Count);
-                List<double> array_xp2 = new List<double>(array1.Count);
-                List<double> array_yp2 = new List<double>(array1.Count);
-                for (int i = 0; i < array1.Count; i++)
-                    array_xy.Add(array1[i] * array2[i]);
-                for (int i = 0; i < array1.Count; i++)
-                    array_xp2.Add(Math.Pow(array1[i], 2.0));
-                for (int i = 0; i < array1.Count; i++)
-                    array_yp2.Add(Math.Pow(array2[i], 2.0));
-                double sum_x = 0;
-                double sum_y = 0;
-                foreach (double n in array1)
-                    sum_x += n;
-                foreach (double n in array2)
-                    sum_y += n;
-                double sum_xy = 0;
-                foreach (double n in array_xy)
-                    sum_xy += n;
-                double sum_xpow2 = 0;
-                foreach (double n in array_xp2)
-                    sum_xpow2 += n;
-                double sum_ypow2 = 0;
-                foreach (double n in array_yp2)
-                    sum_ypow2 += n;
-                double Ex2 = Math.Pow(sum_x, 2.00);
-                double Ey2 = Math.Pow(sum_y, 2.00);
-
-                double Correl =
-                (array1.Count * sum_xy - sum_x * sum_y) /
-                Math.Sqrt((array1.Count * sum_xpow2 - Ex2) * (array1.Count * sum_ypow2 - Ey2));
-
-
-
-                //Console.WriteLine("CORREL FOR " + pair + " INTERVAL " + s + "-" + (s + intervalSize - 1) + " : " + Correl);
-
-                fileLine.Add(pair + "," + indexCol + "," + s + "," + (s + intervalSize - 1) + "," + Correl+","+ szTimeFroms[0] + "," + szTimeFroms[szTimeFroms.Count-1]);
-                indexCol++;
-            }
-            return fileLine;
-            
-        }
-        static void CorrFourArrays(String pair, List<double> originalArray1, List<double> originalArray2, List<double> originalArray1s, List<double> originalArray2s, int intervalSize, String szOutputFileName, List<String> pairFroms)
+        static void CorrPair(String pair, List<double> originalArray1, List<double> originalArray2, int intervalSize, String szOutputFileName)
         {
 
 
             TextWriter correlations = new StreamWriter(szOutputFileName, true);// "approachesDATA_05_30_19perHOUR.csv");
-            /*
+
             int indexCol = 0;
             for (int s = 0; s + intervalSize < originalArray1.Count; s = s + intervalSize)
             {
@@ -1371,381 +1365,124 @@ namespace ApproachAndCorrelation
                 double Correl =
                 (array1.Count * sum_xy - sum_x * sum_y) /
                 Math.Sqrt((array1.Count * sum_xpow2 - Ex2) * (array1.Count * sum_ypow2 - Ey2));
-
+                if (Correl.ToString().Trim() == "NaN")
+                {
+                    bool stop = true;
+                }
 
 
                 Console.WriteLine("CORREL FOR " + pair + " INTERVAL " + s + "-" + (s + intervalSize - 1) + " : " + Correl);
 
                 correlations.WriteLine(pair + "," + indexCol + "," + s + "," + (s + intervalSize - 1) + "," + Correl);
                 indexCol++;
-            }*/
-
-            List<String> corrs1 = CorrTwoArrays(pair, originalArray1, originalArray2, intervalSize, szOutputFileName, pairFroms);
-            List<String> corrs2 = CorrTwoArrays(pair, originalArray1s, originalArray2s, intervalSize, szOutputFileName, pairFroms);
-
-
-            for(int l=0;l<corrs1.Count;l++)
-            {
-                correlations.WriteLine(corrs1.ElementAt(l) + ","+corrs2.ElementAt(l));
-
             }
-
             correlations.Close();
-        }
-        static void ShuffleSMAFile(String szOldFile, String szNewFile)
-        {//nonRandomShuffle true if shufflesize is going to be used
-            
-            TextWriter shuffledSmas = new StreamWriter(szNewFile, true);// "approachesDATA_05_30_19perHOUR.csv");
-            Dictionary<String, List<String>> pairLines = new Dictionary<string, List<string>>();
-            Dictionary<String, List<String>> pairShuffledLines = new Dictionary<string, List<string>>();
-            List<String> currentPairLines = new List<string>();
-            String currentPair = "";
-            using (StreamReader sr = new StreamReader(szOldFile))
-            {
-                String commaLine = sr.ReadLine();
-                shuffledSmas.WriteLine(commaLine+",Shuffled_"+ commaLine.Replace(",",",Shuffled_"));
-                while ((!sr.EndOfStream))// && lineCount<10000)
-                {
-                   
-                    commaLine = sr.ReadLine();
-                    String[] columns = commaLine.Split(',');
-                    String pairA = columns[5].Trim();
-                     
-                    if(currentPair!="" && currentPair!= pairA)
-                    {
-                        if (!pairLines.ContainsKey(pairA))
-                        {
-                            pairLines.Add(pairA, new List<string>());
-                        }
-                        pairLines[pairA] = currentPairLines;
-
-                        currentPairLines = currentPairLines.OrderBy(a => Guid.NewGuid()).ToList();
-                        if (!pairShuffledLines.ContainsKey(pairA))
-                        {
-                            pairShuffledLines.Add(pairA, new List<string>());
-                        }
-                        pairShuffledLines[pairA] = currentPairLines;
-                        currentPairLines = new List<string>();
-                    }
-                    currentPairLines.Add(commaLine);
-                    currentPair = pairA;
-                    // shuffledSmas.WriteLine("");
-                }
-            }
-          
-            
-            
-          foreach(String key in pairShuffledLines.Keys)
-            {
-
-                for (int l = 0; l < pairShuffledLines[key].Count; l++)
-                {
-                    shuffledSmas.WriteLine(pairLines[key].ElementAt(l) + "," + pairShuffledLines[key].ElementAt(l));
-                }
-            }
-            
-        
-                 
-     
-            shuffledSmas.Close();
-        }
-        static void ShuffleSMAFile(String szOldFile, String szNewFile, bool nonRandomShuffle, int shuffleSize)
-        {//nonRandomShuffle true if shufflesize is going to be used
-
-            TextWriter shuffledSmas = new StreamWriter(szNewFile, true);// "approachesDATA_05_30_19perHOUR.csv");
-
-            Dictionary<String, List<String>> pairLines = new Dictionary<string, List<string>>();
-            Dictionary<String, List<List<String>>> pairShuffledLineLists = new Dictionary<string, List<List<String>>>();
-
-            List<String> currentPairLines = new List<string>();
-            List<String> currentShuffledPairLines = new List<string>();
-            String currentPair = "";
-            int currentPos = 0;
-            int linesRead = 0;
-            bool shuffling = false;
-
-            using (StreamReader sr = new StreamReader(szOldFile))
-            {
-                String commaLine = sr.ReadLine();
-                shuffledSmas.WriteLine(commaLine + ",Shuffled_" + commaLine.Replace(",", ",Shuffled_"));
-                 
-                try
-                {
-
-
-                    while ((!sr.EndOfStream))// && lineCount<10000)
-                    {
-                        linesRead++;
-
-                        commaLine = sr.ReadLine();
-                        String[] columns = commaLine.Split(',');
-                        String pairA = columns[5].Trim();
-
-                        if (currentPair != "" && currentPair != pairA)
-                        {
-                            if (!pairLines.ContainsKey(currentPair))
-                            {
-                                pairLines.Add(currentPair, new List<string>());
-                            }
-                            pairLines[currentPair] = currentPairLines;
-
-                            currentPairLines = new List<string>();
-
-
-
-                            currentShuffledPairLines = currentShuffledPairLines.OrderBy(a => Guid.NewGuid()).ToList();
-                            if (!pairShuffledLineLists.ContainsKey(currentPair))
-                            {
-                                pairShuffledLineLists.Add(currentPair, new List<List<string>>());
-                            }
-                            pairShuffledLineLists[currentPair].Add(currentShuffledPairLines);
-                            currentShuffledPairLines = new List<string>();
-                            currentPos = 0;
-
-                        }
-                        currentPairLines.Add(commaLine);
-                        currentPair = pairA;
-
-                        if (nonRandomShuffle)
-                        {
-                            if (currentPos >= shuffleSize)
-                            {
-                                currentShuffledPairLines = currentShuffledPairLines.OrderBy(a => Guid.NewGuid()).ToList();
-                                if (!pairShuffledLineLists.ContainsKey(pairA))
-                                {
-                                    pairShuffledLineLists.Add(pairA, new List<List<string>>());
-                                }
-                                pairShuffledLineLists[pairA].Add(currentShuffledPairLines);
-                                currentShuffledPairLines = new List<string>();
-                                currentPos = 0;
-                            }
-                        }
-
-                        currentPos++;
-
-                        currentShuffledPairLines.Add(commaLine);
-
-
-                        // shuffledSmas.WriteLine("");
-                    }
-
-                    if (currentPair != "")
-                    {
-
-                        if (!pairLines.ContainsKey(currentPair))
-                        {
-                            pairLines.Add(currentPair, new List<string>());
-                        }
-                        pairLines[currentPair] = currentPairLines;
-
-                        currentPairLines = new List<string>();
-
-
-                        shuffling = true;
-                        currentShuffledPairLines = currentShuffledPairLines.OrderBy(a => Guid.NewGuid()).ToList();
-                        shuffling = false;
-                        if (!pairShuffledLineLists.ContainsKey(currentPair))
-                        {
-                            pairShuffledLineLists.Add(currentPair, new List<List<string>>());
-                        }
-                        pairShuffledLineLists[currentPair].Add(currentShuffledPairLines);
-
-                    }
-                }
-                catch(Exception e)
-                {
-
-                    Console.WriteLine("linesRead " + linesRead + " shuffling"+ shuffling);
-                }
-            }
-
-
-          
-            foreach (String key in pairShuffledLineLists.Keys)
-            {
-                int l = 0;
-                foreach(List<String> shuffledList in pairShuffledLineLists[key])
-                {
-                    foreach (String shuffeledLine in shuffledList)
-                    {
-
-                        shuffledSmas.WriteLine(pairLines[key].ElementAt(l) + "," + shuffeledLine);
-                        l++;
-
-                    }
-
-                }
-            }
-            
-
-
-
-            shuffledSmas.Close();
-        }
-        static void mergeFiles(String[] files, String newFileName)
-        {
-            TextWriter sw = new StreamWriter(newFileName);
-            Boolean skipHeader = false;
-            foreach (String file in files)
-            {
-                using (StreamReader sr = new StreamReader(file))
-                {
-                    if (skipHeader)
-                        sr.ReadLine();
-                    skipHeader = true;
-                    while ((!sr.EndOfStream))
-                    {
-                        sw.WriteLine(sr.ReadLine());
-                    }
-                }
-            }
-
-
-            sw.Close();
-        }
-        static void cleanFile(String szFileName)
-        {
-            TextWriter sw = new StreamWriter(szFileName.Replace(".CSV","_CLEANED.CSV"));
-            using (StreamReader sr = new StreamReader(szFileName))
-            {
-                     
-                while ((!sr.EndOfStream))
-                {
-                    String szLine = sr.ReadLine();
-                    String[] lineCols = szLine.Split(',');
-                    if (lineCols[2].Trim()!=""&& lineCols[13].Trim() != "")
-                    sw.WriteLine(szLine);
-                }
-            }
-            
-
-            sw.Close();
-
         }
         static void Main(string[] args)
         {
+            //PR_LEAP_PM_1819_chunk_5000_4_16_2020
+            String dir = "C:\\LVL\\approach\\";
 
-            String dir = "E:\\PRIDE_LEAP\\PRIDE_LEAP_AM\\SYNC\\";
-            dir = "C:\\LVL\\";
-
-
-            //approach_trunk_4_16_2019_10_3_2019_1707233820_1280177929Ordered.CSV
-            String version = "11_11_2019_939400824";// "10_3_2019_1707233820";// "9_12_2019_839583655";// "9_10_2019_93585323";//approach_trunk_4_16_2019_9_12_2019_839583655.CSV
-            String szDates = "1_23_2019,4_16_2019";
-            szDates = "4_16_2019,1_23_2019,2_20_2019,3_20_2019,5_30_2019";
-            szDates = "4_16_2019";
+            String version = "5_7_2020_589199400";
+            String szDates = "4_16_2020";// 1_23_2019";
             String[] dates = szDates.Split(',');
-            Boolean processTeachers =  false;
-            Boolean processLabs =  false; ;
+            Boolean processTeachers = false;
+            Boolean processLabs = false;
             int processSize = 8;
-            String szVersion = "";// new Random().Next().ToString();
+            String szVersion = new Random().Next().ToString();
+            String orderedFile = "";
 
-            if (args.Length >= 3)
+            if (args.Length >= 6)
+            {
+                dir = "";
+                version = args[1];
+                szDates = args[2];
+                dates = szDates.Split(',');
+                processTeachers = args.Length >= 4 && args[3].Trim().ToLower() == "true" ? true : false;
+                processLabs = args.Length >= 5 && args[4].Trim().ToLower() == "true" ? true : false; ;
+                orderedFile = args[0].Trim();
+            }
+            if (args.Length >= 5)
             {
                 dir = args[0];
                 version = args[1];
                 szDates = args[2];
                 dates = szDates.Split(',');
                 processTeachers = args.Length >= 4 && args[3].Trim().ToLower() == "true" ? true : false;
-                processLabs = args.Length >= 5 && args[4].Trim().ToLower() == "true" ? true : false; ;
-            } 
-              
-                foreach (String szd in dates)
-                {
-                /********APPROACH HEADER*******/
-                //  Person 1, Person2, Interaction Time, Interaction Millisecond,d1,d2,approachMeters,x10,y10,x20,y20,x11,y11,x21,y21, 
-                // WithinGR, WithinGRAnd45deg, Angle1, Angle2,Type1, Type2, Gender1, Gender2, Diagnosis1, Diagnosis2 ,
-                String approachFileName = dir + "approach_trunk_" + szd + "_" + version + ".CSV";
-                //Add Ordered pair and diagnosis gender etc to file.
-                String tailName = dir + "approach_trunk_" + szd + "_" + version + "tail.CSV";
-                String headName = dir + "approach_trunk_" + szd + "_" + version + "head.CSV";
-                //getHead(approachFileName, 1000000, headName); //500500, baseName);
-                //getTail(dir + "approach_trunk_" + szd + "_" + version + ".CSV", 100000, tailName); //500500, baseName);
-
-                //approachFileName = headName;
-                //approach_trunk_4_16_2019_11_11_2019_939400824_trunk500500
-                Console.WriteLine("PROCESSING orderedPairList " + szd + " (" + DateTime.Now.ToShortTimeString());
-               // List<String> orderedPairList = MainConvertTenToOrdered(approachFileName, processTeachers, processLabs, szVersion);
-                //new List<string>();//  MainConvertTenToOrdered(approachFileName, processTeachers, processLabs,szVersion);
-                 //PairA,PairOrdered,Date,TimeMS
-                //"E:\\PRIDE_LEAP\\SYNC\\approach_trunk_4_16_2019_9_10_2019_93585323.CSV", false, false);
-                String szFNRaw = approachFileName.Replace(".CSV", "_Ordered.CSV");
-                String szFNAll = dir + "approach_trunk_" + szd + "_" + version + "_" + szVersion + "weightedSMAapp.CSV";
-                String szFN = dir + "approach_trunk_" + szd + "_" + version + "_" + szVersion + "weightedSMAapp.CSV";
-                //"approach_trunk_4_16_2019_8_14_2019_626094195_weightedSMAapp" + new Random().Next() + ".CSV";
-                int p = 0;
-                String shuffleSmaFileName = szFN.Replace(".CSV", "_SHUFFFLED.CSV");
-                String szFNChunk = szFN;
-                String szSmaFileNames = "";
-                String szShuffledFileNames = "";
-                String szCorrFileNames = "";
-                /*  for (; p + processSize < orderedPairList.Count; p = (p + processSize))
-                  {
-                      szFNChunk = szFN.Replace(".CSV", "_" + p + ".CSV");
-                      Console.WriteLine(p + " TO " + (p + processSize - 1) + " [" + (p + 1) + " TO " + (p + processSize) + "]" + " (" + DateTime.Now.ToShortTimeString());
-                      List<String> includedPairs = orderedPairList.GetRange(p, processSize);
-                      SMA(szFNRaw, 10, szFNChunk, includedPairs, false);// p > 0);
-                      Console.WriteLine("PROCESSING ShuffleSMAFile " + szd + " (" + DateTime.Now.ToShortTimeString());
-                      shuffleSmaFileName = szFNChunk.Replace(".CSV", "_SHUFFFLEDALL.CSV");
-
-                      ShuffleSMAFile(szFNChunk, shuffleSmaFileName, false, 10);
-
-                      szShuffledFileNames += shuffleSmaFileName + ",";
-                      szCorrFileNames += shuffleSmaFileName.Replace(".CSV", "_CORR600.CSV") + ",";
-
-                      Corr(shuffleSmaFileName, 600, shuffleSmaFileName.Replace(".CSV", "_CORR600.CSV"));
-
-
-                  }
-                  if (p <= orderedPairList.Count)
-                  {
-                      szFNChunk = szFN.Replace(".CSV", "_" + p + ".CSV");
-                      int lastIndex = p;
-                      int countLeft = orderedPairList.Count - lastIndex;
-                      Console.WriteLine(p + " TO " + (p + countLeft - 1) + " [" + (p + 1) + " TO " + (p + countLeft) + "]" + " (" + DateTime.Now.ToShortTimeString());
-                      List<String> includedPairs = orderedPairList.GetRange(lastIndex, countLeft);
-                      SMA(szFNRaw, 10, szFNChunk, includedPairs, false);// p > 0);
-                      Console.WriteLine("PROCESSING ShuffleSMAFile " + szd + " (" + DateTime.Now.ToShortTimeString());
-                      shuffleSmaFileName = szFNChunk.Replace(".CSV", "_SHUFFFLEDALL.CSV");
-                      ShuffleSMAFile(szFNChunk, shuffleSmaFileName, false, 10);
-
-                      szShuffledFileNames += shuffleSmaFileName + ",";
-                      Corr(shuffleSmaFileName, 600, shuffleSmaFileName.Replace(".CSV", "_CORR600.CSV"));
-                      szCorrFileNames += shuffleSmaFileName.Replace(".CSV", "_CORR600.CSV") + ",";
-
-                  }
-                  */
-                szShuffledFileNames = dir + "approach_trunk_4_16_2019_11_11_2019_939400824_weightedSMAapp_0_SHUFFFLEDALL.CSV" + "," +
-                                        dir + "approach_trunk_4_16_2019_11_11_2019_939400824_weightedSMAapp_8_SHUFFFLEDALL.CSV" + "," +
-                                        dir + "approach_trunk_4_16_2019_11_11_2019_939400824_weightedSMAapp_16_SHUFFFLEDALL.CSV" + "," +
-                                        dir + "approach_trunk_4_16_2019_11_11_2019_939400824_weightedSMAapp_24_SHUFFFLEDALL.CSV" + "," +
-                                        dir + "approach_trunk_4_16_2019_11_11_2019_939400824_weightedSMAapp_32_SHUFFFLEDALL.CSV" + "," +
-                                        dir + "approach_trunk_4_16_2019_11_11_2019_939400824_weightedSMAapp_40_SHUFFFLEDALL.CSV" + "," +
-                                        dir + "approach_trunk_4_16_2019_11_11_2019_939400824_weightedSMAapp_48_SHUFFFLEDALL.CSV" + "," +
-                                        dir + "approach_trunk_4_16_2019_11_11_2019_939400824_weightedSMAapp_56_SHUFFFLEDALL.CSV" + "," +
-                                        dir + "approach_trunk_4_16_2019_11_11_2019_939400824_weightedSMAapp_64_SHUFFFLEDALL.CSV" + ",";
-
-
-                String[] shuffled = szShuffledFileNames.Substring(0, szShuffledFileNames.Length - 1).Split(',');
-                foreach (String szSFile in shuffled)
-                {
-                    String cleanFileName = szSFile.Replace(".CSV", "_CLEANED.CSV");
-                    cleanFile(szSFile);
-                    szCorrFileNames += cleanFileName.Replace(".CSV", "_CORR600.CSV") + ",";
-
-                    Console.WriteLine("PROCESSING Corr for "+ cleanFileName + " (" + DateTime.Now.ToShortTimeString());
-                    Corr(cleanFileName, 600, cleanFileName.Replace(".CSV", "_CORR600.CSV"));
-
-
-                }
-               // shuffleSmaFileName = szFN.Replace(".CSV", "_SHUFFFLEDALL.CSV");
-                Console.WriteLine("PROCESSING mergeFiles " + " (" + DateTime.Now.ToShortTimeString());
-                mergeFiles(szCorrFileNames.Substring(0, szCorrFileNames.Length-1).Split(','), szFN.Replace(".CSV", "_SHUFFFLEDALLCORR.CSV"));
-                 
-                //Corr(shuffleSmaFileName, 600, shuffleSmaFileName.Replace(".CSV", "_CORR600.CSV"));
-                //Corr(shuffleSmaFileName, -1, shuffleSmaFileName.Replace(".CSV", "_CORR.CSV"));//-1 if we want to correlate all 
-                // Corr(shuffleSmaFileName, 10, shuffleSmaFileName.Replace(".CSV", "_CORR.CSV"));
+                processLabs = args.Length >= 5 && args[4].Trim().ToLower() == "true" ? true : false;
             }
+            else if (args.Length >= 3)
+            {
+                dir = "";
+                version = args[1];
+                szDates = args[2];
+                dates = szDates.Split(',');
+                processTeachers = args.Length >= 4 && args[3].Trim().ToLower() == "true" ? true : false;
+                processLabs = args.Length >= 5 && args[4].Trim().ToLower() == "true" ? true : false;
+                orderedFile = args[0].Trim();
+            }
+            else if (args.Length >= 2)
+            {
+                dir = "";
+                version = args[0];
+                szDates = args[1];
+                dates = szDates.Split(',');
+                processTeachers = args.Length >= 3 && args[2].Trim().ToLower() == "true" ? true : false;
+                processLabs = args.Length >= 4 && args[3].Trim().ToLower() == "true" ? true : false; ;
+            }
+            foreach (String szd in dates)
+            {
+                List<String> orderedPairList;
+                orderedFile = "";// D:\\approachDATA\\LEAP_AM\\LEAP_AM_1920\\rawApproaches\\approach_trunk_11_1_2019_4_17_2020_1173190353_1877670914Ordered.CSV";  // debugging to delete later!!
+
+                //ADD 5 COLS TO APP FILE WHOCH CONTAINS PAIR (PAIRA), PAIRORDERED (NUMERICAL ORDERED), DAY, MS, LAWCOS (MOVEMENT ANGLE)
+                if (orderedFile == "")
+                    orderedPairList = MainConvertTenToOrdered(dir + "approach_trunk_" + szd + "_" + version + ".CSV", processTeachers, processLabs, szVersion, true);
+                else
+                    orderedPairList = GetPairsFromOrdered(orderedFile);
+
+                orderedPairList.Sort();
+
+                String szFNRaw = orderedFile == "" ?
+                    dir + "approach_trunk_" + szd + "_" + version + "_" + szVersion + "Ordered.CSV" : orderedFile;
+
+
+                String szFN = dir + "approach_trunk_" + szd + "_" + version + "_" + szVersion + "weightedSMAapp.CSV";
+
+                // debug to delete later!!! set szFNexisting = "";
+                string szFNexisting = "";// "D:\\approachDATA\\LEAP_AM\\LEAP_AM_1819\\rawApproaches\\approach_trunk_4_16_2019_11_11_2019_939400824_2041033646weightedSMAapp.CSV";
+
+                int p = 0;
+                if (szFNexisting != "")
+                {
+                    szFN = szFNexisting;
+                }
+                else
+                {
+                    for (; p + processSize < orderedPairList.Count; p = (p + processSize))
+                    {
+                        Console.WriteLine(p + " TO " + (p + processSize - 1) + " [" + (p + 1) + " TO " + (p + processSize) + "]");
+                        List<String> includedPairs = orderedPairList.GetRange(p, processSize);
+                        //create Person1,Person2,d0,approachMeters,approachWeighted,PairA,PairOrdered,Date file
+                        //note that there is no time in sma file but should be ordered??? 
+                        SMA(szFNRaw, 10, szFN, includedPairs, p > 0);
+                    }
+                    if (p <= orderedPairList.Count)
+                    {
+                        int lastIndex = p;
+                        int countLeft = orderedPairList.Count - lastIndex;
+                        Console.WriteLine(p + " TO " + (p + countLeft - 1) + " [" + (p + 1) + " TO " + (p + countLeft) + "]");
+
+
+                        List<String> includedPairs = orderedPairList.GetRange(lastIndex, countLeft);
+                        SMA(szFNRaw, 10, szFN, includedPairs, p > 0);
+                    }
+                }
+                CorrFileName(szFN, 600, szFN.Replace(".CSV", "_CORR.CSV"));
+
+
+            }
+
 
         }
     }
